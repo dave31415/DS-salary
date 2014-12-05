@@ -19,8 +19,6 @@
     </h2><h5>
 
     <form>
-        Constant :
-        <span ng-bind="constant"></span><br>
         Region :
         <input type="radio" ng-model="region" value="north-east" ng-change="recalculate()" > North East
         <input type="radio" ng-model="region" value="california" ng-change="recalculate()" > California
@@ -66,10 +64,6 @@
         Tool Count :
         <input type="text" ng-model="tool_count" ng-change="recalculate()"> <br>
 
-        Bonus : <span ng-bind="bonus"></span><br>
-        Stock options : <span ng-bind="stock_options"></span><br>
-        Stock ownership : <span ng-bind="stock"></span><br>
-        Bonus + Stock options + Stock ownership : <span ng-bind="extra_compensation"></span> (included in Total Salary)<br>
 
     </form>
 
@@ -90,13 +84,34 @@
         Julia, Haskell, Zookeeper, Redshift, Flume, D3, Git, bash.
     </p>
 
-    <p> Other Notes</p>
-    The O'Reilly study reported a detection of a gender gap of $13K against women. The model intentionally does NOT
-    include that term as we do not want to enforce an explicit bias. One might also want to replace Age with some
+    <h2> Other Notes</h2>
+    The O'Reilly study reported a detection of a gender gap of $13K against women. The calculation above intentionally does NOT
+    include that term as we do not want to enforce an explicit bias against women. One might also want to replace Age with some
     measure of experience as we would not really want to use Age explicitly. For example replace "Age" with
     25 + Years of relevant work experience.
+    <p>Accuracy</p>
+    Regarding accuracy, O'Reilly says "The model estimates 25% of the respondents' salaries to within $10k, 50%
+    to within $20k, and 75% to within $40k." which suggests a standard deviation of roughly $30K.
 
-    
+    <p>Extra compensation</p>
+
+    The regression model has a boolean variable for whether the person gets a bonus, stock or stock-option compensation.
+    If they do, their total compensation is adjusted by the following factors.
+    <p>
+    Bonus : <span ng-bind="bonus"></span><br>
+    Stock options : <span ng-bind="stock_options"></span><br>
+    Stock ownership : <span ng-bind="stock"></span><br>
+    </p>
+
+    <p>
+    The report does not say explicitly what percentage of people receive these sources of extra compensation. However it
+    does say "For U.S. respondents only, the base and total medians were $105k and $144k, respectively." That means that
+    average extra compensation is $39K or 27% of total compensation and 37% of base. Another thorough study on
+    data scientist salaries by BurchWorks (Linda Burch April 2014) gives similar results and shows the percentage of
+    people receiving these extra sources of compensation to be about 65-80% depending on job level.
+    </p>
+
+
 <!--end of angular app div -->    
 </div>
 
@@ -128,10 +143,15 @@
     $scope.tool_count = 14;
 
     //maps
-    region_map = {"europe" : 24104, "asia" : 30906, "california" : 25785, "mid-atlantic" : 21750, "north-east" : 17703, "other" : 0.0};
+    region_map = {"europe" : -24104, "asia" : -30906, "california" : 25785,
+    "mid-atlantic" : 21750, "north-east" : 17703, "other" : 0.0};
+
     industry_map = {"education" : -30036, "tech" : -17294 , "government" : -16616, "other" : 0}
+
     position_map = {"non-manager": 1, "tech-lead" : 2, "manager" : 3, "executive" : 4}
+
     cloud_map = {"using": 0, "experimenting" : -9196 , "not using" : -12994}
+
     tool_count_map = {"microsoft": -1112, "big data" : 1645 , "data science" : 1900};
 
     $scope.recalculate =  function() {
@@ -157,6 +177,8 @@
         $scope.extra_compensation = $scope.bonus + $scope.stock_options + $scope.stock;
 
         $scope.salary = salary;
+
+
     };
 
     $scope.recalculate();
