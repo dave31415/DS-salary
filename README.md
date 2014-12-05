@@ -8,3 +8,5 @@ The study gives a linear regression formula which is here implemented in a singl
 AngularJS application. Just download index.html and open it in any (modern) browser.
 
 We also recommend the studies by [BurchWorks](http://www.burtchworks.com/big-data-analyst-salary/)
+
+App can be accessed [here](http://bit.ly/1tWs8zD)
